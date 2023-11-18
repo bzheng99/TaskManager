@@ -22,5 +22,13 @@ class CalendarActivity : AppCompatActivity() {
 
         calendarFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
             as CalendarFragment? ?:CalendarFragment()
+        /*if(savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, CalendarFragment())
+                .commit()
+        }
+
+        calendarFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)
+            as CalendarFragment? ?:CalendarFragment()*/
     }
 }
