@@ -29,6 +29,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import com.example.taskmanager.R
 import com.example.taskmanager.displayText
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CalendarFragment : Fragment(R.layout.calendar_fragment) {
     private var selectedDate: LocalDate? = null
@@ -95,6 +96,10 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             oldDate?. let { binding.exFiveCalendar.notifyDateChanged(it) }
                             Log.d("Calendar Fragment", selectedDate.toString())
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
+                            val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
+                            fabAddTask.setOnClickListener {
+                                AddTaskActivity()
+                            }
                         }
                     }
                 }
