@@ -6,8 +6,8 @@ import android.util.Log
 import androidx.core.view.children
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.CalendarView
+// import android.view.ViewGroup
+// import android.widget.CalendarView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -39,7 +39,6 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding = CalendarFragmentBinding.bind(view)
 
-        // Log.d("On View Created", selectedDate.toString())
         // Initial Configuration of Calendar
         val daysOfWeek = daysOfWeek()
         val currentMonth = YearMonth.now()
@@ -84,9 +83,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
             val binding = CalendarDayBinding.bind(view)
 
             init {
-                // selectedDate = LocalDate.now()
                 view.setOnClickListener {
-
                     if(day.position == DayPosition.MonthDate) {
                         if(selectedDate != day.date) {
                             val oldDate = selectedDate
