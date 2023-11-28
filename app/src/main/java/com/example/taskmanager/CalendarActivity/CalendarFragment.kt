@@ -98,7 +98,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
                             val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
-                                //saveAction()
+                                AddTaskActivity()
                             }
                         }
                     }
