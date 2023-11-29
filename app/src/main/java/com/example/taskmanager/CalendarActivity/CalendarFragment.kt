@@ -1,5 +1,6 @@
 package com.example.taskmanager.CalendarActivity
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.taskmanager.AddTaskActivity.AddTaskActivity
 
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -98,7 +100,9 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
                             val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
-                                AddTaskActivity()
+                                // Create intent to start AddTaskActivity
+                                val intent = Intent(activity, AddTaskActivity::class.java)
+                                startActivity(intent)
                             }
                         }
                     }
