@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
 
 @Entity(tableName = "task_item_table")
 class Task(
+    @ColumnInfo(name = "date") var date: String,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "desc") var desc: String,
     @ColumnInfo(name = "dueTimeString") var dueTimeString: String?,
@@ -19,6 +20,7 @@ class Task(
     @ColumnInfo(name = "completedDateString") var completedDateString: String?,
     @PrimaryKey(autoGenerate = true) var id: Int = 0
 ) {
+
     private fun completedDate(): LocalDate? = if (completedDateString == null) null else LocalDate.parse(completedDateString, dateFormatter)
     fun dueTime(): LocalTime? = if (dueTimeString == null) null else LocalTime.parse(dueTimeString, timeFormatter)
     fun dueDate(): LocalDate? = if (dueDateString == null) null else LocalDate.parse(dueDateString, dateFormatter)

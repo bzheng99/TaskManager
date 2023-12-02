@@ -17,20 +17,26 @@ import com.example.taskmanager.databinding.TaskActivityMainBinding
 class AddTaskActivity : AppCompatActivity(), TaskClickListener
 {
     private lateinit var binding: TaskActivityMainBinding
-    //private lateinit var taskViewModel: TaskViewModel
     private val taskViewModel: TaskViewModel by viewModels {
         TaskModelFactory((application as TodoApplication).repository)
     }
+
+    private var selectedDate: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         binding = TaskActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+
+        // Retrieve selected date from intent extras
+        val selectedDate = intent.getStringExtra("selectedDate")
+        if (selectedDate != null) {
+            supportActionBar?.title = "Tasks for $selectedDate"
+        }
 
         binding.newTaskButton.setOnClickListener {
-            NewTaskSheet(null).show(supportFragmentManager, "newTaskTag")
+            NewTaskSheet(null, selectedDate.toString()).show(supportFragmentManager, "newTaskTag")
         }
         setRecyclerView()
     }
@@ -38,17 +44,21 @@ class AddTaskActivity : AppCompatActivity(), TaskClickListener
     private fun setRecyclerView()
     {
         val mainActivity = this
-        taskViewModel.tasks.observe(this){
+        taskViewModel.tasks.observe(this) { allTasks ->
+            // Filter tasks based on the selected date
+            val tasksForSelectedDate = allTasks.filter { it.date == selectedDate.toString() }
+
             binding.todoListRecyclerView.apply {
                 layoutManager = LinearLayoutManager(applicationContext)
-                adapter = TaskAdapter(it, mainActivity)
+                adapter = TaskAdapter(tasksForSelectedDate, mainActivity)
             }
         }
     }
 
     override fun editTask(task: Task)
     {
-        NewTaskSheet(task).show(supportFragmentManager,"newTaskTag")
+        val newTaskSheet = NewTaskSheet(task, selectedDate.toString())
+        newTaskSheet.show(supportFragmentManager, "newTaskTag")
     }
 
     override fun completeTask(task: Task)
