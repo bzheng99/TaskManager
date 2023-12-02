@@ -2,9 +2,6 @@ package com.example.taskmanager.NewEditTaskActivity
 
 import android.app.AlarmManager
 import android.app.TimePickerDialog
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -16,7 +13,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import com.example.taskmanager.Model.Task
@@ -28,15 +24,13 @@ import java.time.LocalTime
 import java.time.LocalDate
 
 
-class NewTaskSheet(var taskItem: Task?) : BottomSheetDialogFragment() {
+class NewTaskSheet(var taskItem: Task?, private val selectedDate: String) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentNewTaskSheetBinding
     private lateinit var taskViewModel: TaskViewModel
     private var dueTime: LocalTime? = null
     private var dueDate: LocalDate? = null
 
     lateinit var etDateTime: Button
-    var notificationTimeMillis: Long = 0
-    var notificationId: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,18 +68,6 @@ class NewTaskSheet(var taskItem: Task?) : BottomSheetDialogFragment() {
         binding.deleteButton.setOnClickListener {
             deleteAction()
         }
-
-        // Create the notification channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "channel_id",
-                "Channel Name",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val notificationManager =
-                getSystemService(requireContext(), NotificationManager::class.java)
-            notificationManager?.createNotificationChannel(channel)
-        }
     }
 
     private fun openTimePicker() {
@@ -98,8 +80,6 @@ class NewTaskSheet(var taskItem: Task?) : BottomSheetDialogFragment() {
         val dialog = TimePickerDialog(activity, listener, dueTime!!.hour, dueTime!!.minute, true)
         dialog.setTitle("Task Due")
         dialog.show()
-        //send notification
-
     }
 
     private fun updateTimeButtonText() {
@@ -122,7 +102,7 @@ class NewTaskSheet(var taskItem: Task?) : BottomSheetDialogFragment() {
         val dueTimeString = if (dueTime == null) null else Task.timeFormatter.format(dueTime)
         val dueDateString = if (dueDate == null) null else Task.dateFormatter.format(dueDate)
         if (taskItem == null) {
-            val newTask = Task(name, desc, dueTimeString, dueDateString, null)
+            val newTask = Task(selectedDate, name, desc, dueTimeString, dueDateString, null)
             taskViewModel.addTask(newTask)
         } else {
             taskItem!!.name = name
@@ -152,65 +132,4 @@ class NewTaskSheet(var taskItem: Task?) : BottomSheetDialogFragment() {
             taskViewModel.deleteTask(taskItem!!)
         }
     }
-
-    //create notifications
-//    private fun createNotification(): Notification {
-//        val notificationIntent = Intent(context, MyReceiver::class.java)
-//        notificationIntent.putExtra("Task Due", "value")
-//
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            context,
-//            notificationId,
-//            notificationIntent,
-//            PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//        return NotificationCompat.Builder(requireContext(), "channel_id")
-//            .setSmallIcon(R.drawable.ic_notification)
-//            .setContentTitle("Task Due!")
-//            .setContentText("Notification Text")
-//            //.setContentIntent(pendingIntent)
-//            .setAutoCancel(true)
-//            .build()
-//    }
-
-
-//    private fun scheduleNotification() {
-//        if (dueTime != null && dueDate != null) {
-//            val calendar = Calendar.getInstance()
-//            calendar.set(
-//                dueDate!!.year,
-//                dueDate!!.monthValue - 1,  // Adjust for 0-based month
-//                dueDate!!.dayOfMonth,
-//                dueTime!!.hour,
-//                dueTime!!.minute
-//            )
-//
-//            val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-//            val notificationIntent = Intent(context, MyReceiver::class.java)
-//
-//            // Add dueTime and dueDate as extras in the intent
-//            notificationIntent.putExtra("due_time", dueTime.toString())
-//            notificationIntent.putExtra("due_date", dueDate.toString())
-//
-//            val pendingIntent = PendingIntent.getBroadcast(
-//                context,
-//                notificationId,
-//                notificationIntent,
-//                PendingIntent.FLAG_IMMUTABLE
-//            )
-//
-//            notificationTimeMillis = calendar.timeInMillis
-//
-//            // Set the time at which the notification should be shown
-//            if (alarmManager != null) {
-//                alarmManager.set(
-//                    AlarmManager.RTC_WAKEUP,
-//                    notificationTimeMillis,
-//                    pendingIntent
-//                )
-//            }
-//        }
-//
-//    }
 }
