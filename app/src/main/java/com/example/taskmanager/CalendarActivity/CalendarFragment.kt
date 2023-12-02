@@ -97,11 +97,16 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             binding.exFiveCalendar.notifyDateChanged(day.date)
                             oldDate?. let { binding.exFiveCalendar.notifyDateChanged(it) }
                             Log.d("Calendar Fragment", selectedDate.toString())
+
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
                             val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
+                                Log.e("Task Button","add task button pressed")
+
                                 // Create intent to start AddTaskActivity
                                 val intent = Intent(activity, AddTaskActivity::class.java)
+                                intent.putExtra("selectedDate", selectedDate.toString())
+
                                 startActivity(intent)
                             }
                         }
