@@ -30,7 +30,7 @@ class AddTaskActivity : AppCompatActivity(), TaskClickListener
         setContentView(binding.root)
 
         // Retrieve selected date from intent extras
-        val selectedDate = intent.getStringExtra("selectedDate")
+        selectedDate = intent.getStringExtra("selectedDate")
         if (selectedDate != null) {
             supportActionBar?.title = "Tasks for $selectedDate"
         }
