@@ -1,9 +1,11 @@
 package com.example.taskmanager.AddTaskActivity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.taskmanager.CalendarActivity.CalendarActivity
 import com.example.taskmanager.NewEditTaskActivity.NewTaskSheet
 import com.example.taskmanager.Model.Task
 import com.example.taskmanager.Model.TaskModelFactory
@@ -33,6 +35,11 @@ class AddTaskActivity : AppCompatActivity(), TaskClickListener
         selectedDate = intent.getStringExtra("selectedDate")
         if (selectedDate != null) {
             supportActionBar?.title = "Tasks for $selectedDate"
+        }
+
+        // Set a click listener for the backButton
+        binding.backButton.setOnClickListener {
+            finish()
         }
 
         binding.newTaskButton.setOnClickListener {
