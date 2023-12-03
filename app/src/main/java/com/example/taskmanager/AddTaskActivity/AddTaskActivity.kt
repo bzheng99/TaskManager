@@ -3,6 +3,7 @@ package com.example.taskmanager.AddTaskActivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.taskmanager.CalendarActivity.CalendarActivity
@@ -32,7 +33,9 @@ class AddTaskActivity : AppCompatActivity(), TaskClickListener
         setContentView(binding.root)
 
         // Retrieve selected date from intent extras
+        UnderReview
         selectedDate = intent.getStringExtra("selectedDate")
+        
         if (selectedDate != null) {
             supportActionBar?.title = "Tasks for $selectedDate"
         }
