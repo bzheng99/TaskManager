@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter
 
 @Entity(tableName = "task_item_table")
 class Task(
+    // @PrimaryKey(autoGenerate = true) val id: Int?,
     @ColumnInfo(name = "date") var date: String,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "desc") var desc: String,

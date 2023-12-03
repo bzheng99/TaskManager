@@ -9,8 +9,8 @@ import kotlinx.coroutines.SupervisorJob
 
 class TodoApplication : Application()
 {
-    // val applicationScope = CoroutineScope(SupervisorJob())
-    val database by lazy { TaskDatabase.getDatabase(this)}
-    // val database by lazy { TaskDatabase.getDatabase(this, applicationScope) }
+    val applicationScope = CoroutineScope(SupervisorJob())
+    // val database by lazy { TaskDatabase.getDatabase(this)}
+    val database by lazy { TaskDatabase.getDatabase(this, applicationScope) }
     val repository by lazy { TaskRepository(database.taskDao()) }
 }

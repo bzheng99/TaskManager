@@ -5,13 +5,12 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import androidx.core.view.children
-// import android.view.LayoutInflater
 import android.view.View
-// import android.view.ViewGroup
-// import android.widget.CalendarView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-// import com.example.taskmanager.AddTaskActivity.AddTaskActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -32,12 +31,20 @@ import java.time.YearMonth
 import com.example.taskmanager.R
 import com.example.taskmanager.displayText
 import com.example.taskmanager.AddTaskActivity.AddTaskActivity
+import com.example.taskmanager.Model.TaskDao
+import com.example.taskmanager.Model.TaskDatabase
+import com.example.taskmanager.Model.TaskRepository
+import com.example.taskmanager.TodoApplication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 class CalendarFragment : Fragment(R.layout.calendar_fragment) {
     private var selectedDate: LocalDate? = null
     private lateinit var binding: CalendarFragmentBinding
 
+    /*private val viewModel: CalendarFragmentViewModel by viewModels {
+        CalendarFragmentViewModelFactory((requireActivity().application as TodoApplication).repository)
+    }*/
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CalendarFragmentBinding.bind(view)
@@ -95,11 +102,10 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             binding.exFiveCalendar.notifyDateChanged(day.date)
                             oldDate?. let { binding.exFiveCalendar.notifyDateChanged(it) }
                             Log.d("Calendar Fragment", selectedDate.toString())
-
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
                             val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
-                                Log.e("Task Button","add task button pressed")
+                                Log.d("Task Button","add task button pressed")
 
                                 // Create intent to start AddTaskActivity
                                 val intent = Intent(activity, AddTaskActivity::class.java)
@@ -119,6 +125,8 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                 val context = container.binding.root.context
                 val textView = container.binding.exFiveDayText
                 val layout = container.binding.exFiveDayLayout
+                val uiTask = container.binding.uiTask
+                uiTask.background = null
                 textView.text = data.date.dayOfMonth.toString()
 
                 // Configure color of the text for the dates
@@ -126,6 +134,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                 if(data.position == DayPosition.MonthDate) {
                     textView.setTextColorRes(R.color.example_5_text_grey)
                     layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.example_5_selected_bg else 0)
+
                 } else {
                     textView.setTextColorRes(R.color.example_5_text_grey_light)
                     layout.background = null
@@ -153,6 +162,5 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                 }
             }
     }
-
 }
 

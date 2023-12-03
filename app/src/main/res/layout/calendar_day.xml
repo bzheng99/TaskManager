@@ -23,21 +23,13 @@
             android:textSize="12sp"
             tools:text="24" />
 
-        <!--<View
-            android:id="@+id/exFiveDayFlightTop"
+        <View
+            android:id="@+id/uiTask"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="18dp"
-            android:background="@color/blue_grey_700" />
-
-        <View
-            android:id="@+id/exFiveDayFlightBottom"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="8dp"
-            android:background="@color/brown_700" />-->
+            android:background="@color/brown_700" />
 
 
     </FrameLayout>

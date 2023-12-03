@@ -4,16 +4,19 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.taskmanager.Util.Converters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [Task::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class TaskDatabase : RoomDatabase()
 {
     abstract fun taskDao(): TaskDao
 
-    /*private class TaskDatabaseCallback(
+    private class TaskDatabaseCallback(
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
@@ -25,9 +28,9 @@ abstract class TaskDatabase : RoomDatabase()
                 }
             }
         }
-    }*/
+    }
 
-    companion object
+    /*companion object
     {
         @Volatile
         private var INSTANCE: TaskDatabase? = null
@@ -45,8 +48,8 @@ abstract class TaskDatabase : RoomDatabase()
                 instance
             }
         }
-    }
-    /*companion object {
+    }*/
+    companion object {
         @Volatile
         private var INSTANCE: TaskDatabase? = null
 
@@ -66,5 +69,5 @@ abstract class TaskDatabase : RoomDatabase()
                 instance
             }
         }
-    }*/
+    }
 }
