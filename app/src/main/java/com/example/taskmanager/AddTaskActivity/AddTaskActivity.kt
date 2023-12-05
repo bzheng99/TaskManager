@@ -33,7 +33,7 @@ class AddTaskActivity : AppCompatActivity(), TaskClickListener
         setContentView(binding.root)
 
         // Retrieve selected date from intent extras
-        UnderReview
+
         selectedDate = intent.getStringExtra("selectedDate")
         
         if (selectedDate != null) {

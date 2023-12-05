@@ -7,10 +7,7 @@ import android.util.Log
 import androidx.core.view.children
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -31,23 +28,17 @@ import java.time.YearMonth
 import com.example.taskmanager.R
 import com.example.taskmanager.displayText
 import com.example.taskmanager.AddTaskActivity.AddTaskActivity
-import com.example.taskmanager.Model.TaskDao
-import com.example.taskmanager.Model.TaskDatabase
-import com.example.taskmanager.Model.TaskRepository
-import com.example.taskmanager.TodoApplication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.launch
 
 class CalendarFragment : Fragment(R.layout.calendar_fragment) {
     private var selectedDate: LocalDate? = null
     private lateinit var binding: CalendarFragmentBinding
 
-    /*private val viewModel: CalendarFragmentViewModel by viewModels {
-        CalendarFragmentViewModelFactory((requireActivity().application as TodoApplication).repository)
-    }*/
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = CalendarFragmentBinding.bind(view)
+
 
         // Initial Configuration of Calendar
         val daysOfWeek = daysOfWeek()
@@ -56,32 +47,32 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
         val endMonth = currentMonth.plusMonths(200)
         // Calendar Setup
         configureBinders(daysOfWeek)
-        binding.exFiveCalendar.setup(startMonth, endMonth, daysOfWeek.first())
-        binding.exFiveCalendar.scrollToMonth(currentMonth)
+        binding.Calendar.setup(startMonth, endMonth, daysOfWeek.first())
+        binding.Calendar.scrollToMonth(currentMonth)
 
         // When user scrolls to new month, listener updates the displayed month and resets the
         // selected date.
-        binding.exFiveCalendar.monthScrollListener = { month ->
-            binding.exFiveMonthYearText.text = month.yearMonth.displayText()
+        binding.Calendar.monthScrollListener = { month ->
+            binding.MonthYearText.text = month.yearMonth.displayText()
 
             // Clear selection if we scroll to new month
             selectedDate?.let{
                 selectedDate = null
-                binding.exFiveCalendar.notifyDateChanged(it)
+                binding.Calendar.notifyDateChanged(it)
             }
         }
 
         // Next Month Button
-        binding.exFiveNextMonthImage.setOnClickListener {
-            binding.exFiveCalendar.findFirstVisibleMonth()?.let {
-                binding.exFiveCalendar.smoothScrollToMonth(it.yearMonth.nextMonth)
+        binding.NextMonthImage.setOnClickListener {
+            binding.Calendar.findFirstVisibleMonth()?.let {
+                binding.Calendar.smoothScrollToMonth(it.yearMonth.nextMonth)
             }
         }
 
         // Previous Month Button
-        binding.exFivePreviousMonthImage.setOnClickListener {
-            binding.exFiveCalendar.findFirstVisibleMonth()?.let {
-                binding.exFiveCalendar.smoothScrollToMonth(it.yearMonth.previousMonth)
+        binding.PreviousMonthImage.setOnClickListener {
+            binding.Calendar.findFirstVisibleMonth()?.let {
+                binding.Calendar.smoothScrollToMonth(it.yearMonth.previousMonth)
             }
         }
 
@@ -99,9 +90,10 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             val oldDate = selectedDate
                             selectedDate = day.date
                             val binding = this@CalendarFragment.binding
-                            binding.exFiveCalendar.notifyDateChanged(day.date)
-                            oldDate?. let { binding.exFiveCalendar.notifyDateChanged(it) }
+                            binding.Calendar.notifyDateChanged(day.date)
+                            oldDate?. let { binding.Calendar.notifyDateChanged(it) }
                             Log.d("Calendar Fragment", selectedDate.toString())
+
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
                             val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
@@ -118,25 +110,27 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                 }
             }
         }
-        binding.exFiveCalendar.dayBinder = object : MonthDayBinder<DayViewContainer> {
+        binding.Calendar.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: CalendarDay) {
                 container.day = data
                 val context = container.binding.root.context
-                val textView = container.binding.exFiveDayText
-                val layout = container.binding.exFiveDayLayout
+                val textView = container.binding.DayText
+                val layout = container.binding.DayLayout
+                // NEED TO STILL IMPLEMENT UITASK COLOR
                 val uiTask = container.binding.uiTask
                 uiTask.background = null
+
                 textView.text = data.date.dayOfMonth.toString()
 
                 // Configure color of the text for the dates
                 // E.g. Rolling dates from the previous month need to be a different color
                 if(data.position == DayPosition.MonthDate) {
-                    textView.setTextColorRes(R.color.example_5_text_grey)
-                    layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.example_5_selected_bg else 0)
+                    textView.setTextColorRes(R.color.text_grey)
+                    layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.selected_bg else 0)
 
                 } else {
-                    textView.setTextColorRes(R.color.example_5_text_grey_light)
+                    textView.setTextColorRes(R.color.text_grey_light)
                     layout.background = null
                 }
             }
@@ -147,7 +141,7 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
         }
 
         val typeFace = Typeface.create("sans-serif-light", Typeface.NORMAL)
-        binding.exFiveCalendar.monthHeaderBinder =
+        binding.Calendar.monthHeaderBinder =
             object : MonthHeaderFooterBinder<MonthViewContainer> {
                 override fun create(view: View) = MonthViewContainer(view)
                 override fun bind(container: MonthViewContainer, data: CalendarMonth) {

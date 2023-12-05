@@ -11,10 +11,5 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
     </style>
-    <style name="Example4ToolbarTheme" parent="ThemeOverlay.MaterialComponents.Light">
-        <item name="colorControlNormal">@color/example_4_grey</item>
-    </style>
-    <style name="Example4ButtonTheme" parent="ThemeOverlay.MaterialComponents.Light">
-        <item name="colorPrimary">@color/example_4_green</item>
-    </style>
+
 </resources>

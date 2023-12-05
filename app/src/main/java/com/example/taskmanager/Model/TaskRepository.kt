@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import kotlinx.coroutines.flow.first
 
 class TaskRepository(private val taskDao: TaskDao) {
     val allTasks: Flow<List<Task>> = taskDao.allTasks()
@@ -32,8 +33,8 @@ class TaskRepository(private val taskDao: TaskDao) {
     }
 
     /*@WorkerThread
-    suspend fun getTasksForDate(date: LocalDate): List<Task> {
-        return taskDao.getTasksByDate(date)
+    suspend fun checkIfTaskExists(date: String) : Boolean {
+        val taskCount = taskDao.getTaskCount(date).first()
+        return taskCount > 0
     }*/
-
 }
