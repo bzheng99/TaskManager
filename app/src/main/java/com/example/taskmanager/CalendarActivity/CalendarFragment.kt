@@ -110,17 +110,6 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
 
                             startActivity(intent)
 
-
-                            /*val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
-                            fabAddTask.setOnClickListener {
-                                Log.d("Task Button","add task button pressed")
-
-                                // Create intent to start AddTaskActivity
-                                val intent = Intent(activity, AddTaskActivity::class.java)
-                                intent.putExtra("selectedDate", selectedDate.toString())
-
-                                startActivity(intent)
-                            }*/
                         }
                     }
                 }
