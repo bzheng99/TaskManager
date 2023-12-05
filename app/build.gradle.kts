@@ -49,6 +49,8 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.room:room-common:2.6.0")
+    // implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+
     // implementation("androidx.room:room-common:2.5.0-rc01")
     // implementation("androidx.room:room-common:2.4.3")
 

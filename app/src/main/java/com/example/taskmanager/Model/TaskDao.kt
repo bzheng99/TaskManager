@@ -1,5 +1,6 @@
 package com.example.taskmanager.Model
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -18,4 +19,10 @@ interface TaskDao {
     @Delete
     suspend fun deleteTask(task: Task)
 
+    @Query("SELECT * FROM task_item_table WHERE date = :selectedDate")
+    fun getTasksForDate(selectedDate: String): Flow<List<Task>>
+
+    // Add a method to check if there are tasks for a specific date
+    @Query("SELECT COUNT(*) FROM task_item_table WHERE date = :selectedDate")
+    suspend fun countTasksForDate(selectedDate: String): Int
 }

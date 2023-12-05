@@ -7,7 +7,10 @@ import android.util.Log
 import androidx.core.view.children
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.CalendarMonth
@@ -21,19 +24,26 @@ import com.kizitonwose.calendar.view.ViewContainer
 import com.example.taskmanager.databinding.CalendarHeaderBinding
 import com.example.taskmanager.databinding.CalendarFragmentBinding
 import com.example.taskmanager.databinding.CalendarDayBinding
-
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import com.example.taskmanager.R
 import com.example.taskmanager.displayText
 import com.example.taskmanager.AddTaskActivity.AddTaskActivity
+import com.example.taskmanager.Model.Task
+import com.example.taskmanager.Model.TaskModelFactory
+import com.example.taskmanager.Model.TaskViewModel
+import com.example.taskmanager.TodoApplication
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 class CalendarFragment : Fragment(R.layout.calendar_fragment) {
     private var selectedDate: LocalDate? = null
     private lateinit var binding: CalendarFragmentBinding
 
+    private val taskViewModel: TaskViewModel by viewModels {
+        TaskModelFactory((requireActivity().application as TodoApplication).repository)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -95,7 +105,13 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                             Log.d("Calendar Fragment", selectedDate.toString())
 
                             // PROBABLY THE SPOT TO CALL METHOD FOR STARTING ADD TASK METHOD
-                            val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
+                            val intent = Intent(activity, AddTaskActivity::class.java)
+                            intent.putExtra("selectedDate", selectedDate.toString())
+
+                            startActivity(intent)
+
+
+                            /*val fabAddTask = (activity as CalendarActivity).findViewById<FloatingActionButton>(R.id.fabAddTask)
                             fabAddTask.setOnClickListener {
                                 Log.d("Task Button","add task button pressed")
 
@@ -104,12 +120,13 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                                 intent.putExtra("selectedDate", selectedDate.toString())
 
                                 startActivity(intent)
-                            }
+                            }*/
                         }
                     }
                 }
             }
         }
+
         binding.Calendar.dayBinder = object : MonthDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: CalendarDay) {
@@ -117,8 +134,9 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                 val context = container.binding.root.context
                 val textView = container.binding.DayText
                 val layout = container.binding.DayLayout
-                // NEED TO STILL IMPLEMENT UITASK COLOR
+                // uiTask is the color bar component on the calendar
                 val uiTask = container.binding.uiTask
+                // set the background to null by default
                 uiTask.background = null
 
                 textView.text = data.date.dayOfMonth.toString()
@@ -129,9 +147,17 @@ class CalendarFragment : Fragment(R.layout.calendar_fragment) {
                     textView.setTextColorRes(R.color.text_grey)
                     layout.setBackgroundResource(if (selectedDate == data.date) R.drawable.selected_bg else 0)
 
+                    lifecycleScope.launch {
+                        // If the data has a task, change the color of the component
+                        val hasTask = taskViewModel.checkIfDateHasTask(data.date.toString())
+                        if(hasTask) {
+                            uiTask.setBackgroundColor(ContextCompat.getColor(context, R.color.cyan_700))
+                        }
+                    }
                 } else {
                     textView.setTextColorRes(R.color.text_grey_light)
                     layout.background = null
+                    // uiTask.background = null
                 }
             }
         }

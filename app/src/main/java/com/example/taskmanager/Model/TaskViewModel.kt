@@ -27,6 +27,12 @@ class TaskViewModel(private val repository: TaskRepository): ViewModel()
             task.completedDateString = Task.dateFormatter.format(LocalDate.now())
         repository.updateTask(task)
     }
+
+    suspend fun checkIfDateHasTask(selectedDate: String): Boolean {
+        return repository.checkIfDateHasTask(selectedDate)
+    }
+
+
 }
 
 class TaskModelFactory(private val repository: TaskRepository) : ViewModelProvider.Factory
